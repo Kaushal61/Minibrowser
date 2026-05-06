@@ -1,82 +1,63 @@
 package com.minimal.browser;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.inputmethod.EditorInfo;
-import android.webkit.CookieManager;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
-import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.EditText;
-import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
     private WebView webView;
-    private EditText urlBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // 🚀 JAISE HI APP START HO, SWIPE DETECT KARNE WALI SERVICE CHALU KAR DO
-        startService(new Intent(this, ClearService.class));
-
-        urlBar = findViewById(R.id.urlBar);
         webView = findViewById(R.id.webView);
-
-        // Security ke liye ek baar clear
-        forceClearEverything();
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
-        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        settings.setSaveFormData(false);
-
-        CookieManager.getInstance().setAcceptThirdPartyCookies(webView, false);
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
+        settings.setUserAgentString(
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 " +
+            "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        );
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            public boolean shouldOverrideUrlLoading(WebView view,
+                    WebResourceRequest request) {
                 view.loadUrl(request.getUrl().toString());
                 return true;
             }
         });
 
-        urlBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_GO ||
-                    (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    String url = urlBar.getText().toString().trim();
-                    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                        url = "https://" + url;
-                    }
-                    webView.loadUrl(url);
-                    return true;
-                }
-                return false;
-            }
-        });
+        webView.loadUrl("https://web.whatsapp.com");
     }
 
-    private void forceClearEverything() {
-        CookieManager.getInstance().removeAllCookies(null);
-        CookieManager.getInstance().flush();
-        WebStorage.getInstance().deleteAllData();
-
+    private void clearCacheOnly() {
         if (webView != null) {
             webView.clearCache(true);
-            webView.clearHistory();
-            webView.clearFormData();
-            webView.clearSslPreferences();
         }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        clearCacheOnly();
+    }
+
+    @Override
+    protected void onDestroy() {
+        clearCacheOnly();
+        super.onDestroy();
     }
 
     @Override
@@ -84,122 +65,7 @@ public class MainActivity extends Activity {
         if (webView.canGoBack()) {
             webView.goBack();
         } else {
-            forceClearEverything();
-            if (webView != null) {
-                webView.destroy();
-            }
             super.onBackPressed();
         }
     }
-
-    @Override
-    protected void onDestroy() {
-        forceClearEverything();
-        if (webView != null) {
-            webView.destroy();
-        }
-        super.onDestroy();
     }
-                    }package com.minimal.browser;
-
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.inputmethod.EditorInfo;
-import android.webkit.CookieManager;
-import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
-import android.webkit.WebStorage;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.EditText;
-import android.widget.TextView;
-
-public class MainActivity extends Activity {
-
-    private WebView webView;
-    private EditText urlBar;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        // 🚀 JAISE HI APP START HO, SWIPE DETECT KARNE WALI SERVICE CHALU KAR DO
-        startService(new Intent(this, ClearService.class));
-
-        urlBar = findViewById(R.id.urlBar);
-        webView = findViewById(R.id.webView);
-
-        // Security ke liye ek baar clear
-        forceClearEverything();
-
-        WebSettings settings = webView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);
-        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        settings.setSaveFormData(false);
-
-        CookieManager.getInstance().setAcceptThirdPartyCookies(webView, false);
-
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                view.loadUrl(request.getUrl().toString());
-                return true;
-            }
-        });
-
-        urlBar.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_GO ||
-                    (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    String url = urlBar.getText().toString().trim();
-                    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                        url = "https://" + url;
-                    }
-                    webView.loadUrl(url);
-                    return true;
-                }
-                return false;
-            }
-        });
-    }
-
-    private void forceClearEverything() {
-        CookieManager.getInstance().removeAllCookies(null);
-        CookieManager.getInstance().flush();
-        WebStorage.getInstance().deleteAllData();
-
-        if (webView != null) {
-            webView.clearCache(true);
-            webView.clearHistory();
-            webView.clearFormData();
-            webView.clearSslPreferences();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack();
-        } else {
-            forceClearEverything();
-            if (webView != null) {
-                webView.destroy();
-            }
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        forceClearEverything();
-        if (webView != null) {
-            webView.destroy();
-        }
-        super.onDestroy();
-    }
-            }
