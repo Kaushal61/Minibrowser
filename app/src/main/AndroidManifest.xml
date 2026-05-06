@@ -6,7 +6,7 @@
     <!-- We are now using a default Android system icon to prevent missing file crashes -->
     <application
         android:allowBackup="false"
-        android:icon="@android:drawable/sym_def_app_icon"
+        android:icon="@drawable/white_icon"
         android:label="Minimal"
         android:theme="@android:style/Theme.NoTitleBar">
         
