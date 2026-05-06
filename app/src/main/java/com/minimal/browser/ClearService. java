@@ -1,11 +1,12 @@
-package com.minimal.browser;
+package com.zero.browser;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import java.io.File;
 
 public class ClearService extends Service {
-    
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -13,36 +14,29 @@ public class ClearService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_NOT_STICKY; // App kill hone par service dubara faltu mein start na ho
+        return START_NOT_STICKY;
     }
 
-    // 🔥 ASLI MAGIC YAHAN HOGA: Jab aap recents se swipe karoge tab yeh run hoga
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
         try {
-            // OS level par jadd se WebView ka saara kachra, cookies aur cache udayega
-            java.io.File dataDir = new java.io.File(getApplicationInfo().dataDir);
-            java.io.File webviewDir = new java.io.File(dataDir, "app_webview");
-            
-            deleteDir(webviewDir); // Pura WebView data folder delete
-            deleteDir(getCacheDir()); // Pura Cache delete
+            File dataDir = new File(getApplicationInfo().dataDir);
+            deleteDir(new File(dataDir, "app_webview"));
+            deleteDir(getCacheDir());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        stopSelf(); // Apna kaam karke service turant khud ko kill kar legi
+        stopSelf();
     }
 
-    // Folder aur files delete karne ka helper method
-    private boolean deleteDir(java.io.File dir) {
+    private void deleteDir(File dir) {
         if (dir != null && dir.isDirectory()) {
-            String[] children = dir.list();
-            if (children != null) {
-                for (String child : children) {
-                    deleteDir(new java.io.File(dir, child));
-                }
+            File[] files = dir.listFiles();
+            if (files != null) {
+                for (File f : files) deleteDir(f);
             }
         }
-        return dir != null && dir.delete();
+        if (dir != null) dir.delete();
     }
 }
