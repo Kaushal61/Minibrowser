@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.minimal.browser.v2">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -20,7 +19,7 @@
             </intent-filter>
         </activity>
         
-        <!-- YEH LINE ADD KI HAI -->
+        <!-- Hamari Recents Swipe Cleaner Service -->
         <service android:name=".ClearService" android:stopWithTask="false" />
         
     </application>
