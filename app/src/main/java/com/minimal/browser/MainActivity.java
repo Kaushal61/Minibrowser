@@ -12,6 +12,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
 import android.widget.TextView;
+import java.io.File;
 
 public class MainActivity extends Activity {
 
@@ -21,6 +22,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // ✅ APP KHOLTE HI SAB KUCH NUKE — RELIABLE HAI
+        nukePreviousSession();
+
         setContentView(R.layout.activity_main);
 
         urlBar = findViewById(R.id.urlBar);
@@ -28,10 +33,15 @@ public class MainActivity extends Activity {
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);
 
-        // Cache को RAM में रखो, disk पर नहीं
+        // ❌ DOM Storage band — login tokens save nahi honge
+        settings.setDomStorageEnabled(false);
+
+        // ❌ Disk cache bilkul nahi
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+
+        // ❌ Form data save nahi hoga
+        settings.setSaveFormData(false);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -58,34 +68,26 @@ public class MainActivity extends Activity {
         });
     }
 
-    private void nukeAllData() {
-        // Cache clear
-        webView.clearCache(true);
-
-        // History clear
-        webView.clearHistory();
-
-        // Form data clear
-        webView.clearFormData();
-
-        // SSL preferences clear
-        webView.clearSslPreferences();
-
-        // Cookies clear
+    private void nukePreviousSession() {
+        // Cookies nuke
         CookieManager.getInstance().removeAllCookies(null);
         CookieManager.getInstance().flush();
 
-        // DOM Storage / localStorage clear
+        // WebStorage nuke
         WebStorage.getInstance().deleteAllData();
 
-        // WebView destroy
-        webView.destroy();
+        // Cache folder manually delete
+        deleteDir(getCacheDir());
+        deleteDir(new File(getApplicationInfo().dataDir, "app_webview"));
     }
 
-    @Override
-    protected void onDestroy() {
-        nukeAllData();
-        super.onDestroy();
+    private void deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            for (File child : dir.listFiles() != null ? dir.listFiles() : new File[0]) {
+                deleteDir(child);
+            }
+        }
+        if (dir != null) dir.delete();
     }
 
     @Override
@@ -93,8 +95,7 @@ public class MainActivity extends Activity {
         if (webView.canGoBack()) {
             webView.goBack();
         } else {
-            nukeAllData();
             super.onBackPressed();
         }
     }
-            }
+                     }
