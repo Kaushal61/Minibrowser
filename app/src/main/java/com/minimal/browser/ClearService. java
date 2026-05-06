@@ -1,0 +1,48 @@
+package com.minimal.browser;
+
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+
+public class ClearService extends Service {
+    
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_NOT_STICKY; // App kill hone par service dubara faltu mein start na ho
+    }
+
+    // 🔥 ASLI MAGIC YAHAN HOGA: Jab aap recents se swipe karoge tab yeh run hoga
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        try {
+            // OS level par jadd se WebView ka saara kachra, cookies aur cache udayega
+            java.io.File dataDir = new java.io.File(getApplicationInfo().dataDir);
+            java.io.File webviewDir = new java.io.File(dataDir, "app_webview");
+            
+            deleteDir(webviewDir); // Pura WebView data folder delete
+            deleteDir(getCacheDir()); // Pura Cache delete
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        stopSelf(); // Apna kaam karke service turant khud ko kill kar legi
+    }
+
+    // Folder aur files delete karne ka helper method
+    private boolean deleteDir(java.io.File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            if (children != null) {
+                for (String child : children) {
+                    deleteDir(new java.io.File(dir, child));
+                }
+            }
+        }
+        return dir != null && dir.delete();
+    }
+}
