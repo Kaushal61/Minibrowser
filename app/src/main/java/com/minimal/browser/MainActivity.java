@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.CookieManager;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
+import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.EditText;
@@ -27,6 +29,9 @@ public class MainActivity extends Activity {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
+
+        // Cache को RAM में रखो, disk पर नहीं
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
@@ -53,12 +58,43 @@ public class MainActivity extends Activity {
         });
     }
 
+    private void nukeAllData() {
+        // Cache clear
+        webView.clearCache(true);
+
+        // History clear
+        webView.clearHistory();
+
+        // Form data clear
+        webView.clearFormData();
+
+        // SSL preferences clear
+        webView.clearSslPreferences();
+
+        // Cookies clear
+        CookieManager.getInstance().removeAllCookies(null);
+        CookieManager.getInstance().flush();
+
+        // DOM Storage / localStorage clear
+        WebStorage.getInstance().deleteAllData();
+
+        // WebView destroy
+        webView.destroy();
+    }
+
+    @Override
+    protected void onDestroy() {
+        nukeAllData();
+        super.onDestroy();
+    }
+
     @Override
     public void onBackPressed() {
         if (webView.canGoBack()) {
             webView.goBack();
         } else {
+            nukeAllData();
             super.onBackPressed();
         }
     }
-                             }
+            }
