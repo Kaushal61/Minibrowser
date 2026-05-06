@@ -21,7 +21,7 @@ public class MainActivity extends Activity {
 
         WebSettings settings = webView.getSettings();
 
-        // Login aur session data save rehega
+        // Login aur session data save rahega
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setCacheMode(WebSettings.LOAD_DEFAULT);
@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
         webView.loadUrl("https://web.whatsapp.com");
     }
 
-    // Sirf cache clear — close hone par — login safe rehega
+    // Sirf cache clear — close hone par — login safe rahega
     private void clearCacheOnly() {
         if (webView != null) {
             webView.clearCache(true);
@@ -57,7 +57,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        clearCacheOnly(); // Recents se swipe karne par bhi
+        clearCacheOnly(); // Recents se swipe karne par bhi cache clean
     }
 
     @Override
@@ -74,6 +74,4 @@ public class MainActivity extends Activity {
             super.onBackPressed();
         }
     }
-    }        }
-    }
-                     }
+                                 }
