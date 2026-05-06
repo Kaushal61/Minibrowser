@@ -5,7 +5,7 @@ android {
     namespace 'com.minimal.browser'
     compileSdk 33
     defaultConfig {
-        applicationId "com.minimal.browser"
+        applicationId "com.minimal.browser.v2"
         minSdk 21
         targetSdk 33
         versionCode 1
