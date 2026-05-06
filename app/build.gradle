@@ -1,14 +1,25 @@
 plugins {
-    id 'com.android.application' version '8.1.0'
+    id 'com.android.application'
 }
+
 android {
-    namespace 'com.minimal.browser.v2'
+    namespace "com.zero.browser"
     compileSdk 33
+
     defaultConfig {
-        applicationId "com.minimal.browser.v2"
+        applicationId "com.zero.browser"
         minSdk 21
         targetSdk 33
         versionCode 1
         versionName "1.0"
     }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
 }
