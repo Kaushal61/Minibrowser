@@ -13,7 +13,10 @@ jobs:
         with:
           cache-disabled: true
       - name: Build the APK
-        run: gradle :app:assembleDebug
+        run: |
+          gradle wrapper --gradle-version 8.4
+          chmod +x gradlew
+          ./gradlew :app:assembleDebug
       - uses: actions/upload-artifact@v4
         with:
           name: Zero-Browser-APK
