@@ -9,12 +9,11 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-      - uses: gradle/actions/setup-gradle@v3
-        with:
-          cache-disabled: true
       - name: Build the APK
         run: |
-          gradle wrapper --gradle-version 8.4
+          wget -q https://services.gradle.org/distributions/gradle-8.4-bin.zip -O gradle.zip
+          unzip -q gradle.zip
+          ./gradle-8.4/bin/gradle wrapper
           chmod +x gradlew
           ./gradlew :app:assembleDebug
       - uses: actions/upload-artifact@v4
