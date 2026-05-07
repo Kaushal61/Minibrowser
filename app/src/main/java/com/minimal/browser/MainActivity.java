@@ -78,12 +78,6 @@ public class MainActivity extends Activity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        nukeAll();
-    }
-
-    @Override
     protected void onDestroy() {
         nukeAll();
         super.onDestroy();
@@ -98,4 +92,4 @@ public class MainActivity extends Activity {
             super.onBackPressed();
         }
     }
-            }
+                }
