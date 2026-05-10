@@ -1,23 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="#FFFFFF">
 
-    <EditText
-        android:id="@+id/urlBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter URL..."
-        android:imeOptions="actionGo"
-        android:inputType="textUri"
-        android:maxLines="1"
-        android:padding="12dp" />
-
-    <WebView
-        android:id="@+id/webView"
+    <!-- Container for active WebView -->
+    <FrameLayout
+        android:id="@+id/webview_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</LinearLayout>
+    <!-- Invisible layer capturing the first tap on the blank white screen -->
+    <View
+        android:id="@+id/tap_layer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"/>
+
+    <!-- Invisible touch target in the bottom right for the hidden menu -->
+    <View
+        android:id="@+id/hidden_menu_trigger"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom|end"
+        android:clickable="true"
+        android:focusable="true"/>
+
+    <!-- Minimal Input Field -->
+    <EditText
+        android:id="@+id/url_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="#F5F5F5"
+        android:elevation="4dp"
+        android:hint="Search or type URL"
+        android:imeOptions="actionGo"
+        android:inputType="textUri"
+        android:padding="16dp"
+        android:singleLine="true"
+        android:textColor="#000000"
+        android:textColorHint="#9E9E9E"
+        android:visibility="gone" />
+
+</FrameLayout>
